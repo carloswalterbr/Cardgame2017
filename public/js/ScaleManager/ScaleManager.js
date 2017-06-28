@@ -146,11 +146,11 @@ ScaleManager.getDefaultOptions = function(){
 		density:4,		//плотность сетки (масштаб - 1:density)
 		thickness: 1,	//толщина линий сетки для дебага
 		debug: false,
-		minColsLandscape:  28,
-		minRowsLandscape: 19,
-		minColsPortrait: 20,
+		minColsLandscape:  30,
+		minRowsLandscape: 17,
+		minColsPortrait: 24,
 		minRowsPortrait: 23,
-		cellRelationThreshold: 2.5
+		cellRelationThreshold: 2.9
 	};
 	return options;
 };

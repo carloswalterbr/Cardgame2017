@@ -114,7 +114,10 @@ FieldBuilder.prototype._buildDeckField = function(){
 		iconStyle = {
 			texture: skinManager.skin.suitsName,
 			scale: skinManager.skin.scale,
-			offset: {x: 0, y: skinManager.skin.trumpOffset + skinManager.skin.height/2 - 20 - skinManager.skin.width / 2},
+			offset: {
+				x: 0,
+				y: skinManager.skin.trumpOffset + skinManager.skin.height/2 - 20 - skinManager.skin.width / 2
+			},
 			visible: false
 		};
 	}
@@ -161,5 +164,14 @@ FieldBuilder.prototype._buildDiscardField = function(){
 		addTo: 'back',
 		adjust: false,
 		alwaysVisible: true
+	},
+	{
+		texture: 'skull',
+		shouldHide: false,
+		visible: true,
+		offset: {
+			x:0,
+			y: game.scale.cellHeight/2
+		}
 	});
 };
