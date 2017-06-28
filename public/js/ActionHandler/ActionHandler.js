@@ -49,7 +49,7 @@ ActionHandler.prototype.executeAction = function(action){
 ActionHandler.prototype.handlePossibleActions = function(actions, time, timeSent){
 
 	var actionTypes = actions.map(function(a){return a.type;});
-	var button = ui.actionButtons.getByName('action');
+	var button = ui.cornerButtons.getByName('action');
 	if(~actionTypes.indexOf('SKIP')){
 		this.realAction = 'SKIP';
 		button.label.setText('Skip');

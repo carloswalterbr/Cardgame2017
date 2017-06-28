@@ -96,7 +96,8 @@ FieldBuilder.prototype._buildOpponentFields = function(){
 			axis: this.dimensions[p.id].axis,
 			flipped: this.dimensions[p.id].flipped,
 			direction: this.dimensions[p.id].direction,
-			addTo: this.dimensions[p.id].addTo
+			addTo: this.dimensions[p.id].addTo,
+			alwaysVisible: true
 		});
 		oi++;
 		i++;
@@ -158,6 +159,7 @@ FieldBuilder.prototype._buildDiscardField = function(){
 		axis: 'vertical',
 		direction: 'backward',
 		addTo: 'back',
-		adjust: false
+		adjust: false,
+		alwaysVisible: true
 	});
 };

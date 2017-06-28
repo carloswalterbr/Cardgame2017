@@ -79,13 +79,8 @@ UI.prototype.addButtons = function(){
 	new Button({
 		position: function(width, height){
 			return {
-				x: game.screenWidth/2 - width/2,
-				y: game.scale.cellAt(
-					0,
-					game.scale.numRows - game.scale.density - 1,
-					0,
-					5
-				).y
+				x: game.screenWidth - width*0.75,
+				y: game.scale.cellAt(0,	game.scale.numRows/2 - 1).y - height/2 + game.scale.cellHeight/2
 			};
 		},
 		action: function(){
@@ -94,27 +89,27 @@ UI.prototype.addButtons = function(){
 		text: 'Take',
 		color: 'orange',
 		name: 'action',
-		size: 'wide',
+		size: 'round',
 		textColor: 'white',
-		group: this.actionButtons
+		group: this.cornerButtons,
+		scale: 0.75,
+		fontSize: 50
 	});
 	new Button({
 		position: function(width, height){
-			return game.scale.cellAt(
-				game.scale.numCols - game.scale.density*1.5 - 1,
-				game.scale.numRows - game.scale.density - 1,
-				-width/2,
-				5
-			);
+			return {
+				x: game.screenWidth - 15 - width,
+				y: game.scale.cellAt(0, game.scale.numRows - 2).y - height
+			}
 		},
 		action: game.toggleDebugMode,
-		text: 'Debug',
+		text: 'D',
 		context: game,
 		color: 'orange',
 		name: 'debug',
-		size: 'wide',
+		size: 'small',
 		textColor: 'white',
-		group: this.actionButtons
+		group: this.cornerButtons
 	});
 
 	new Button({
@@ -158,7 +153,7 @@ UI.prototype.addButtons = function(){
 		group: this.cornerButtons
 	});
 
-	this.actionButtons.getByName('action').disable();
+	this.cornerButtons.getByName('action').disable();
 };
 
 UI.prototype.updatePosition = function(){

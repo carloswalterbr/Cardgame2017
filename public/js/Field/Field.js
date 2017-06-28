@@ -227,7 +227,8 @@ var Field = function(options, style, iconStyle){
 	 */
 	this.area = game.add.image(0, 0);
 	this.area.alpha = this.style.alpha;
-	this.area.visible = this.inDebugMode;
+	this.area.visible = false;
+	this.setVisibility(this.inDebugMode);
 	this.base.add(this.area);
 
 	/**
@@ -346,6 +347,7 @@ Field.getDefaultOptions = function(){
 			adjust: true,
 			
 			area: 'plain',	
+			alwaysVisible: false,
 			alpha: 0.35,
 			corner: 5,
 			border: 4

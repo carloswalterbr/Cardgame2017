@@ -48,6 +48,8 @@ window.stateBoot = {
 		game.load.spritesheet('button_grey_small', 'assets/buttons/grey_small.png', 49, 49, 4);
 		game.load.spritesheet('button_orange_wide', 'assets/buttons/orange_wide.png', 190, 50, 4);
 		game.load.spritesheet('button_orange_small', 'assets/buttons/orange_small.png', 49, 49, 4);
+		game.load.spritesheet('button_blue_round', 'assets/buttons/blue_round.png', 208, 208, 4);
+		game.load.spritesheet('button_orange_round', 'assets/buttons/orange_round.png', 416, 416, 4);
 
 		game.load.spritesheet('icon_fullscreen', 'assets/buttons/icon_fullscreen.png', 30, 30, 2);
 		game.load.image('icon_menu', 'assets/buttons/icon_menu.png');

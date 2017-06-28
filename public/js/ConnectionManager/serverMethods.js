@@ -15,7 +15,7 @@ window.serverMethods = {
 			var action = actions[ai];
 			if(action.cid == card.id && field.id == action.field){
 				ui.rope.stop();
-				ui.actionButtons.getByName('action').disable();
+				ui.cornerButtons.getByName('action').disable();
 				actions = null;
 				connection.proxy.recieveCompleteAction(action);
 				return true;
@@ -34,7 +34,7 @@ window.serverMethods = {
 		var actionTypes = actions.map(function(a){return a.type;});
 		if(~actionTypes.indexOf(type)){
 			ui.rope.stop();
-			ui.actionButtons.getByName('action').disable();
+			ui.cornerButtons.getByName('action').disable();
 			var action = {type: type};
 			actions = null;
 			connection.proxy.recieveCompleteAction(action);

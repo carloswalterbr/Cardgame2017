@@ -153,14 +153,10 @@ FieldBuilder.prototype._countOpponentPlacement = function(n){
 	var a = [0, 0, 0];
 	var i = 0;
 	while(n--){
-		if(i > 2)
-			i = 0;
-		if(n >= 2)
-			a[i]++;
-		else if(a[0] == a[2])
-			a[1]++;
+		if(n % 2)
+			a[0]++;
 		else
-			a[2]++;
+			a[1]++;
 		i++;
 	}
 	return a;

@@ -147,7 +147,7 @@ ScaleManager.getDefaultOptions = function(){
 		thickness: 1,	//толщина линий сетки для дебага
 		debug: false,
 		minColsLandscape:  28,
-		minRowsLandscape: 18,
+		minRowsLandscape: 19,
 		minColsPortrait: 20,
 		minRowsPortrait: 23,
 		cellRelationThreshold: 2.5

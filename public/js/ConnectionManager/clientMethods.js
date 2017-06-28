@@ -29,7 +29,7 @@ window.clientMethods = {
 			cardEmitter.start(0, 50, 10, 2000, 20, 1);
 			fieldManager.resetNetwork();
 			ui.rope.stop();
-			ui.actionButtons.getByName('action').disable();
+			ui.cornerButtons.getByName('action').disable();
 			ui.cornerButtons.getByName('queueUp').show();
 		}
 		playerManager.pid = game.pid;
@@ -54,7 +54,7 @@ window.clientMethods = {
 		ui.cornerButtons.getByName('queueUp').hide();
 		connection.resetTimer();
 		ui.rope.stop();
-		ui.actionButtons.getByName('action').disable();
+		ui.cornerButtons.getByName('action').disable();
 		var delay = actionHandler.executeAction(action);
 		if(!action.noResponse){
 			connection.responseTimer = setTimeout(connection.server.sendResponse, !delay && 1 || (delay/game.speed + 300));
