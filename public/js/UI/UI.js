@@ -71,10 +71,13 @@ UI.prototype.addButtons = function(){
 			connection.proxy.queueUp();
 			this.hide();
 		},'lel','queueUp');
+	
 	this.testMenu.addButton( function(){
 			this.hide();
 			ui.optMenu.show();
 		},'options','Options');
+	this.testMenu.addSlider( function(){
+		},'lel','L','Pin','R');
 	this.optMenu.addButton( function(){
 		var mover = game.add.tween(this.buttonsByName['CHS']);
 		mover.to({			
