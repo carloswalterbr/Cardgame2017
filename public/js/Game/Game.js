@@ -10,7 +10,7 @@
 * @see {@link http://phaser.io/docs/2.6.2/Phaser.Game.html}
 */
 
-var Game = function(speed, inDebugMode){
+var Game = function(parent, speed, inDebugMode){
 
 	/**
 	 * Скорость игры.
@@ -99,10 +99,12 @@ var Game = function(speed, inDebugMode){
 
 	Phaser.Game.call(
 		this,
-		this.screenWidth,
- 		this.screenHeight, 
-		Phaser.CANVAS, 
-		'cardgame'
+		{
+			width: this.screenWidth,
+ 			height: this.screenHeight, 
+			renderer: Phaser.CANVAS, 
+			parent: parent
+		}
 	);
 
 	this._dimensionsUpdateTimeout = null;
@@ -182,7 +184,7 @@ Game.prototype.initialize = function(){
 Game.prototype.updateCoordinates = function(){
 	this.shouldUpdateFast = false;
 	this.scale.updateGameSize();
-	var state = this.state.getCurrentState();
+	var state = this.state.getCurrent();
 	state.postResize();
 	this._dimensionsUpdateTimeout = null;
 };
@@ -209,13 +211,6 @@ Game.prototype._updateCoordinatesDebounce = function(){
  */
 Game.prototype._visibilityChangeListener = function(){
 
-	function correct(){
-		actionHandler.highlightPossibleActions();
-		fieldManager.rotateCards();
-		fieldManager.zAlignCards();
-		cardManager.forceApplyValues();
-	}
-
 	function pause(){
 		this.paused = true;	
 		this.pausedByViewChange = true;
@@ -237,11 +232,12 @@ Game.prototype._visibilityChangeListener = function(){
 
 		// Ждем секунду, прежде чем откорректировать элементы игры, которые могли оказаться в неправильном положении
 		// Это делается, чтобы браузер не пропустил requireAnimationFrames движка, или что-то еще, что может пойти не так
-		setTimeout(correct.bind(this), 1000);
+		var state = this.state.getCurrent();
+		setTimeout(state.postResumed.bind(state), 1000);
 	}
 	else{
 		// Устанавливаем таймаут, после которого игра ставится на паузу
-		this._pauseTimeout = setTimeout(pause.bind(this), 10000);
+		this._pauseTimeout = setTimeout(pause.bind(this), this.inDebugMode ? 2000 : 10000);
 	}
 };
 
@@ -286,6 +282,18 @@ Game.prototype.toggleDebugMode = function(){
 	this.time.advancedTiming = this.inDebugMode;
 };
 
+Game.prototype.updateDebug = function(){
+	if(!this.inDebugMode)
+		return;
+	this.debug.text(this.time.fps, 2, 14, "#00ff00");
+};
+
+Game.prototype.fixPause = function(){
+	if(this.stage.disableVisibilityChange && this.paused && !this.pausedByViewChange){
+		this.paused = false;
+		if(this.inDebugMode)
+			console.log('Game: unpaused forced');
+	}
+};
+
 //@include:GameOverride
-//@include:stateBoot
-//@include:statePlay

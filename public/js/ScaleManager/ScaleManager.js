@@ -19,7 +19,7 @@
 
 var ScaleManager = function(options){
 
-	this.options = ScaleManager.getDefaultOptions();
+	this.options = this.getDefaultOptions();
 
 	if(options){
 		for(var o in options){
@@ -135,11 +135,10 @@ ScaleManager.prototype.constructor = ScaleManager;
 
 /**
 * Получить опции по умолчанию (см. {@link ScaleManager|ScaleManager options}).
-* @static
 * @return {object} Опции по умолчанию.
 */
-ScaleManager.getDefaultOptions = function(){
-	var options = {
+ScaleManager.prototype.getDefaultOptions = function(){
+	return {
 		game: game,
 		width: 0,
 		height: 0,
@@ -152,7 +151,6 @@ ScaleManager.getDefaultOptions = function(){
 		minRowsPortrait: 23,
 		cellRelationThreshold: 2.5
 	};
-	return options;
 };
 
 /**
@@ -185,7 +183,7 @@ ScaleManager.prototype._calculateScreenSize = function(reduceMinHeight){
 		else{
 			minHeight = this._minRowsLandscape*this.cellHeight;
 		}
-		minWidth = this._minColsLandscape*this.cellWidth
+		minWidth = this._minColsLandscape*this.cellWidth;
 		this.game.isRawLandscape = true;
 	}
 	else{
@@ -272,7 +270,7 @@ ScaleManager.prototype._calculateGridSize = function(screenWidth, screenHeight){
 	this.numRows = Math.floor(screenHeight/height);
 	this.gridWidth = screenWidth - offset.x*2;
 	this.gridHeight = screenHeight - offset.y*2;
-}
+};
 
 /**
 * Возвращает координаты ячейки.

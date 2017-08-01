@@ -33,17 +33,41 @@ var UI = function(){
 
 UI.prototype.initialize = function(){
 
+	this.logo = game.add.image(game.screenWidth/2, game.screenHeight/2 - 200, 'logo');
+	this.logo.anchor.set(0.5, 0.5);
+	this.logo.scale.set(0.75, 0.75);
+	this.layers.addExistingLayer(this.logo, 6);
+
 	// Таймер хода
-	this.rope = this.layers.addExistingLayer(new Rope(), -3);
-	function getScreenCenter(){
-		return {
-			x:game.screenWidth/2,
-			y:game.screenHeight/2
-		}
-	}
-	this.testMenu = new Menu(getScreenCenter, -4, 'testMenu');
-	this.optMenu = new Menu(getScreenCenter, -5, 'optMenu');
-	this.optMenu.hide();
+	this.rope = this.layers.addExistingLayer(new Rope(), -4);
+	
+	this.testMenu = new Menu({
+		position: function(){
+			return {
+				x:game.screenWidth/2,
+				y:game.screenHeight/2 + 150
+			};
+		}, 
+		z: 5,
+		alpha: 0.95,
+		name: 'testMenu',
+		texture: 'black'
+	});
+	this.optMenu = new Menu({
+		position: function(){
+			return {
+				x:game.screenWidth/2,
+				y:game.screenHeight/2
+			};
+		}, 
+		z: -2,
+		color: ui.colors.white,
+		texture: 'menu_blue',
+		elementColor: 'grey',
+		textColor: 'black',
+		name: 'optMenu'
+	});
+	this.testMenu.show();
 	
 	// Кнопки
 	this.addButtons();
@@ -64,22 +88,31 @@ UI.prototype.initialize = function(){
 
 UI.prototype.addButtons = function(){
 	this.actionButtons = this.layers.addLayer(1, 'actionButtons', true);
-	this.cornerButtons = this.layers.addLayer(-2, 'cornerButtons', true);
+	this.cornerButtons = this.layers.addLayer(-3, 'cornerButtons', true);
 
-	// Кнопки (временные)
-	this.testMenu.addButton( function(){
-			connection.proxy.queueUp();
-			this.hide();
-		},'lel','queueUp');
-	
-	this.testMenu.addButton( function(){
-			this.hide();
-			ui.optMenu.show();
-		},'options','Options');
+	// ГЛАВНОЕ МЕНЮ
+	// Поиск игры
+	this.testMenu.addButton(function(){
+		game.state.change('play');
+		connection.proxy.queueUp();
+	}, 'queueUp','Queue Up');
+
+	// Опции
+	this.testMenu.addButton(function(){
+		ui.optMenu.show();
+	}, 'options','Options');
+
+	// МЕНЮ ОПЦИЙ
+	// Отключение от игры
+	this.optMenu.addButton(function(){
+		localStorage.removeItem('durak_id');
+		document.location.href = document.location.href;
+	}, 'disconnect','Disconnect');
+
 	this.testMenu.addSlider( function(){
 		},'lel','L','Pin','R');
-	this.optMenu.addButton( function(){
-		var mover = game.add.tween(this.buttonsByName['CHS']);
+	this.optMenu.addButton(function(){
+		var mover = game.add.tween(this.elementsByName['CHS']);
 		mover.to({			
 			x: 0,
 			y: 0,
@@ -87,8 +120,9 @@ UI.prototype.addButtons = function(){
 		}, 1000);
 		mover.start();
 	},'lel','NOTHING');	
+
 	this.optMenu.addButton( function(){
-		var mover = game.add.tween(this.buttonsByName['CHS']);
+		var mover = game.add.tween(this.elementsByName['CHS']);
 		mover.to({			
 			x: 0,
 			y: ui.optMenu.background.height,
@@ -96,22 +130,29 @@ UI.prototype.addButtons = function(){
 		}, 1000);
 		mover.start();
 	}, 'next','Next');
-	this.optMenu.addButton( function(button, pointer){
-			if(pointer.isMouse && pointer.button !== 0){
-				skinManager.setSkin('uno');
-			}
-			else if(skinManager.skin.name == 'modern'){
-				skinManager.setSkin('classic');
-			}
-			else{
-				skinManager.setSkin('modern');
-			}
 
-		},'CHS','Change skin');
+	// Смена скина
+	this.optMenu.addButton(function(button, pointer){
+		if(pointer.isMouse && pointer.button !== 0){
+			skinManager.setSkin('uno');
+		}
+		else if(skinManager.skin.name == 'modern'){
+			skinManager.setSkin('classic');
+		}
+		else{
+			skinManager.setSkin('modern');
+		}
+
+	},'CHS','Change skin');
+
+	this.optMenu.addButton(game.toggleDebugMode, 'debug','Debug', game);
+
+	// Закрыть меню
 	this.optMenu.addButton( function(){
 		this.hide();
-		ui.testMenu.show();
 	}, 'Back','Back');
+
+	// Действие
 	new Button({
 		position: function(width, height){
 			return {
@@ -134,25 +175,8 @@ UI.prototype.addButtons = function(){
 		textColor: 'white',
 		group: this.actionButtons
 	});
-	new Button({
-		position: function(width, height){
-			return game.scale.cellAt(
-				game.scale.numCols - game.scale.density*1.5 - 1,
-				game.scale.numRows - game.scale.density - 1,
-				-width/2,
-				5
-			);
-		},
-		action: game.toggleDebugMode,
-		text: 'Debug',
-		context: game,
-		color: 'orange',
-		name: 'debug',
-		size: 'wide',
-		textColor: 'white',
-		group: this.actionButtons
-	});
 
+	// На весь экран
 	new Button({
 		position: function(width, height){
 			return {
@@ -168,6 +192,8 @@ UI.prototype.addButtons = function(){
 		size: 'small',
 		group: this.cornerButtons
 	});
+
+	// Открытие меню
 	new Button({
 		position: function(width, height){
 			return {
@@ -176,16 +202,7 @@ UI.prototype.addButtons = function(){
 			};
 		},
 		action: function(){
-			
-			if(!ui.optMenu.opened){
-			ui.testMenu.hide();
-			ui.optMenu.show();
-			}
-			else{
-				ui.testMenu.show();
-				ui.optMenu.hide();
-			}
-			
+			ui.optMenu.toggle();
 		},
 		icon: 'menu',
 		color: 'orange',
@@ -194,12 +211,17 @@ UI.prototype.addButtons = function(){
 		group: this.cornerButtons
 	});
 
-	this.actionButtons.getByName('action').disable();
+	this.actionButtons.getByName('action').hide();
 };
 
 UI.prototype.updatePosition = function(){
 	this.rope.updatePosition();
 	this.layers.positionElements();
+
+	this.testMenu.update();
+	this.optMenu.update();
+
+	this.logo.position = new Phaser.Point(game.screenWidth/2, game.screenHeight/2 - 200);
 };
 
 UI.prototype.toggleFullScreen = function(){

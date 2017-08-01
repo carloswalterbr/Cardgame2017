@@ -1,27 +1,25 @@
 /**
 * Состояние игры, отвечающее за загрузку.
 * Загружает ассеты и создает соединение с сервером.  
-* Добавляется в `game.state`.  
+* Асинхронное состояние.
 * @namespace stateBoot
-* @see  {@link http://phaser.io/docs/2.6.2/Phaser.State.html|Phaser.State}
-* @see  {@link http://phaser.io/docs/2.6.2/Phaser.StateManager.html|Phaser.StateManager}
-* @property {string} key='boot' Название состояния
-* @property {number} preloadCounter=0 Счетчик тиков загрузки ассетов.
-* @property {number} loadCounter=0 Счетчик тиков подключения к серверу.
+* @see {@link State}
+* @see {@link StateManager}
+* @property {string} key='boot' Название состояния.
 */
 
-window.stateBoot = {
+window.stateBoot = new State('boot', {
 
-
-	key: 'boot',
 
 	/**
-	* Выполняется до загрузки игры и загружает ассеты.
+	* Загружает ассеты.
 	* @memberof stateBoot
 	*/
 	preload: function(){
 
 		console.log('Preloading');
+
+		game.load.image('logo', 'assets/logo.png');
 
 		// Фон
 		game.load.image('wood_light', 'assets/backgrounds/wood_light.png');
@@ -73,14 +71,13 @@ window.stateBoot = {
 	},
 
 	/**
-	* Выполняется в первую очередь, инициализирует показ процесса загрузки.
+	* Инициализирует показ процесса загрузки.
 	* @memberof stateBoot
 	*/
 	init: function(){
 
 		console.log('Starting up');		
 
-		this.preloadCounter = 0;
 		this.loadCounter = 0;
 
 		this.loadtextDOM = document.getElementById('loading-text');
@@ -91,38 +88,35 @@ window.stateBoot = {
 	/**
 	* Обновляет загрузочный текст.
 	* @param  {string} text       загрузочный текст
-	* @param  {string} counterKey название счетчика загрузки
 	*/
-	updateLoadText: function(text, counterKey){
-		if(this[counterKey] > 30)
-			this[counterKey] = 0;
-		for(var i = 0; i < this[counterKey]; i++){
+	updateLoadText: function(text){
+		if(this.loadCounter > 30)
+			this.loadCounter = 0;
+		for(var i = 0; i < this.loadCounter; i++){
 			text += '.';
 		}
 		this.loadtextDOM.innerHTML = text;
-		this[counterKey]++;
+		this.loadCounter++;
 	},
 
 	/**
-	* Выполняется во время загрузки ассетов.
 	* Выводит текст загрузки.
 	* @memberof stateBoot
 	*/
 	loadUpdate: function(){
-		this.updateLoadText('loading assets', 'preloadCounter');
+		this.updateLoadText('loading assets');
 	},
 
 	/**
-	* Выполняется во время соединения с сервером.
 	* Выводит текст загрузки.
 	* @memberof stateBoot
 	*/
 	update: function(){
-		this.updateLoadText('connecting to server', 'loadCounter');
+		this.updateLoadText('connecting to server');
 	},
 
 	/**
-	* Выполняется после загрузки ассетов, инициализирует игру и соединение с сервером.
+	* Инициализирует игру и соединение с сервером.
 	* @memberof stateBoot
 	*/
 	create: function(){
@@ -136,23 +130,23 @@ window.stateBoot = {
 		* @global
 		*/
 		window.connection = new ConnectionManager(game.inDebugMode, window.serverMethods, window.clientMethods);
-
-	},
-
-	/**
-	* Выполняется после того, как игра обработала изменение размера экрана.
-	* @memberof stateBoot
-	*/
-	postResize: function(){
-
 	},
 
 	/** 
-	* Выполняется по окончании загрузки и подключения к серверу. 
-	* Убирает загрузочный текст. 
+	* Убирает загрузочный текст и экран. 
 	* @memberof stateBoot 
 	*/ 
 	shutdown: function(){ 
 		this.loadtextDOM.innerHTML = ''; 
-	} 
-};
+		ui.layers.loadLabels();
+
+		// Форсим дебаг
+		if(game.inDebugMode){
+			game.toggleDebugMode();
+			game.toggleDebugMode();
+		}
+
+		document.getElementById('loading').style.display = 'none';
+		console.log('Game ready');
+	}
+});

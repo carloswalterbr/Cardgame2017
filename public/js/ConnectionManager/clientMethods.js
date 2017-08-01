@@ -13,9 +13,6 @@ window.clientMethods = {
 		if(oldId){
 			connection.proxy.reconnectClient(oldId);
 		}
-		else{
-			playerManager.pid = pid;
-		}
 		localStorage.setItem('durak_id', connId);
 		connection.id = connId;
 	},
@@ -24,17 +21,14 @@ window.clientMethods = {
 		if(pid){
 			console.log('Reconnected to', pid);
 			game.pid = pid;
+			game.state.change('play');
+			connection.proxy.requestGameInfo();
 		}
 		else{
-			cardManager.reset();
-			cardEmitter.start(0, 50, 10, 2000, 20, 1);
-			fieldManager.resetNetwork();
-			ui.rope.stop();
-			ui.actionButtons.getByName('action').disable();
-			ui.testMenu.show();
+			connection.proxy.requestGameInfo();
+			game.state.change('menu');
 		}
-		playerManager.pid = game.pid;
-		connection.proxy.requestGameInfo();
+		
 	},
 
 	recievePossibleActions: function(newActions, time, timeSent){	
@@ -46,7 +40,6 @@ window.clientMethods = {
 	},
 
 	recieveCompleteAction: function(action){
-		ui.testMenu.hide();
 
 		var delay = actionHandler.executeAction(action);
 		if(!action.noResponse){

@@ -85,17 +85,15 @@ CardEmitter.prototype.start = function(minSpeed, maxSpeed, sway, interval, rotat
 		interval = lifespan/this.maxParticles;
 	this.interval = interval;
 	this._start(false, lifespan, interval, undefined, undefined);
-
-	game.world.setChildIndex(this, game.world.children.length - 3);
 };
 
 /**
 * Останавливает эмиттер карт.
 */
 CardEmitter.prototype.stop = function(){
-	if(this.on){
-		this.on = false;
-	}
+	if(!this.on)
+		return;
+	this.on = false;
 	this.forEachAlive(function(p){
 		if(p.visible){
 			var tween = game.add.tween(p);
