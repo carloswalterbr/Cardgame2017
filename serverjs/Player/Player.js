@@ -151,12 +151,14 @@ class Player{
 		else{
 			randomIndex = Math.floor(Math.random()*actions.length);
 		}
+        
 		let action = actions[randomIndex];
+        
 		this.sendResponse(action);
 	}
 
 	sendTakeOrSkipAction(actions){
-		if(actions.length == 1 && (actions[0].type == 'TAKE' || actions[0].type == 'PASS')){
+		if((actions.length) == 1 && (actions[0].type == 'TAKE' || actions[0].type == 'PASS')){
 			let action = actions[0];
 			this.sendResponse(action);
 		}

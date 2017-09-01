@@ -73,7 +73,7 @@ class GameActions{
 		}
 
 		this.log.silly('Response from', player.id, action ? action : '');
-
+        
 		// Выполняем или сохраняем действие
 		let waitingForResponse = false;
 		if(action){

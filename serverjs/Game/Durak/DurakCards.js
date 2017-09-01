@@ -278,12 +278,13 @@ class DurakCards extends GameCards{
 
 		// Выбираем подходящие карты из руки атакующего и собираем из них возможные действия
 		hand.forEach((card) => {
-			let cid = card.id;
 			if(!validValues || ~validValues.indexOf(card.value)){		
 				this.table.forEach((tableField) => {	
 					let action = {
 						type: 'ATTACK',
-						cid: cid,
+						cid: card.id,
+                        cvalue: card.value,
+                        csuit: card.suit,
 						field: tableField.id,
 						linkedField: emptyTable.id
 					};
@@ -299,7 +300,6 @@ class DurakCards extends GameCards{
 		defenseFields.forEach((defenseField) => {
 			let fid = defenseField.id;
 			hand.forEach((card) => {
-				let cid = card.id;
 				let otherCard = defenseField.attack;
 
 				// Карты той же масти и большего значения, либо козыри, если битая карта не козырь,
@@ -310,7 +310,9 @@ class DurakCards extends GameCards{
 				){			
 					let action = {
 						type: 'DEFENSE',
-						cid: cid,
+						cid: card.id,
+                        cvalue: card.value,
+                        csuit: card.suit,
 						field: fid
 					};
 					actions.push(action);
@@ -370,6 +372,8 @@ class DurakCards extends GameCards{
 					let action = {
 						type: 'ATTACK',
 						cid: cid,
+                        cvalue: card.value,
+                        csuit: card.suit,
 						field: fid,
 						linkedField: emptyTable.id
 					};
