@@ -15,72 +15,41 @@ var Slider =function(options) {
 			action: function(){
 				this.hide();
 			},
-			//icon:'green',
+			icon:'green',
 			name: 'CenterOfSlide',
 			group: options.menu.base
 		});
+
 	this.content.push(center);
+
 	this.addContent(function(){ 
 		console.log('sdsdsds');
-		this.hide();});
-	var currentContent = this.content[0]
-	var right = new Button({
+		this.hide();},'menu');
+	this.count = 1;
+	this.previousContent = null;
+	this.currentContent = this.content[this.count-1];
+	this.nextContent = this.content[this.count];
+	var rightArrow = new Button({
 
 			color: 'orange',
 			size: 'left',
-			action: function(){
-						var mover = game.add.tween(currentContent);
-								mover.to({			
-								x: left.position.x,
-								y: left.position.y-left.height,
-								alpha:0
-								}, 1000);
-						var nextSlide =this.checkForNextSlide();
-						
-						
-						var mover2 = game.add.tween(nextSlide)
-							mover.to({			
-								x:defX,
-								y: this.position.y-this.height,
-								alpha:1
-								}, 1000);
-								mover.start();
-								mover2.start();
-								},
+			action: this.nextSlide.bind(this),
 			text: '',
 			name: name,
 			group: options.menu.base
 		});
-		var left = new Button({
+		var leftArrow = new Button({
 		
 			color: 'orange',
 			size: 'right',
-			action: function(){
-						var mover = game.add.tween(center);
-							if (center.alpha ===1){
-								mover.to({			
-								x: left.position.x,
-								y: left.position.y-left.height,
-								alpha:0
-								}, 1000);
-							}
-							if (center.alpha ===0){
-								mover.to({			
-								x:defX,
-								y: this.position.y-this.height,
-								alpha:1
-								}, 1000);
-							}
-
-								mover.start();
-								},
+			action: function(){},
 			text: '',
 			name: 'name',
 			group: options.menu.base
 		});
 	this.slideElements.push(center);
-	this.slideElements.push(left);
-	this.slideElements.push(right);
+	this.slideElements.push(leftArrow);
+	this.slideElements.push(rightArrow);
 	this.content.push(center);
 	this.width = this.slideElements[0].width;
 	this.height = this.slideElements[0].height;
@@ -91,15 +60,9 @@ var Slider =function(options) {
 		this.width +=this.slideElements[i].width+this.margin;
 	}
 	var defX = this.options.menu.background.width/2 -this.slideElements[0].width/2;
-this.checkForNextSlide = function(){
-	var next;
-	for(var i = 0; i <this.content.length-1; i++)
-							if (this.content[i] === currentContent){
-								next = this.content[i+1];
-								break;
-							}
-							return next;
-}
+
+
+
 }
 
 Slider.prototype.getDefaultOptions = function(){
@@ -135,7 +98,7 @@ Slider.prototype.updatePosition = function(position){
 	this.slideElements[2].updatePosition({x: this.slideElements[0].x + this.slideElements[0].width+20 ,y: this.y + this.slideElements[1].height });
 	this.defaultPosition = this.slideElements[0].position;
 	for(var i = 1; i <this.content.length; i++) {
-	this.content[i].updatePosition({x: this.slideElements[0].x + this.slideElements[0].width+20 ,y: this.y});
+		this.content[i].updatePosition({x: this.slideElements[0].x + this.slideElements[0].width+20 ,y: this.y});
 	};
 	this.slideElements[0].updatePosition({x: this.options.menu.background.width/2 -this.slideElements[0].width/2 ,y:this.y});
 }	
@@ -152,6 +115,10 @@ Slider.prototype.show = function(){
 } 
 Slider.prototype.addContent = function(action,icon){
 var newBut = new Button({
+			position:{
+				x:this.x,
+				y:this.y
+			},
 			color: 'orange',
 			size: 'huge',
 			action: action,
@@ -161,4 +128,17 @@ var newBut = new Button({
 		});
 newBut.visible = false;
 this.content.push(newBut);
+}
+Slider.prototype.nextSlide = function(){
+		this.currentContent.visible = false;
+		this.nextContent.visible = true;
+		this.previousContent = this.currentContent;
+		this.currentContent = this.nextContent;
+		if(this.content.length<count-1){
+			this.nextContent = null;
+		}
+		else this.nextContent = this.content[count++];
+}
+this.prevSlide = function(){
+							
 }
