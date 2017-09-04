@@ -1,31 +1,32 @@
 /**
 * Состояние игры, отвечающее за загрузку.
 * Загружает ассеты и создает соединение с сервером.  
-* Асинхронное состояние.
+* Добавляется в `game.state`.  
 * @namespace stateBoot
-* @see {@link State}
-* @see {@link StateManager}
-* @property {string} key='boot' Название состояния.
+* @see  {@link http://phaser.io/docs/2.6.2/Phaser.State.html|Phaser.State}
+* @see  {@link http://phaser.io/docs/2.6.2/Phaser.StateManager.html|Phaser.StateManager}
+* @property {string} key='boot' Название состояния
+* @property {number} preloadCounter=0 Счетчик тиков загрузки ассетов.
+* @property {number} loadCounter=0 Счетчик тиков подключения к серверу.
 */
 
-window.stateBoot = new State('boot', {
+window.stateBoot = {
 
+
+	key: 'boot',
 
 	/**
-	* Загружает ассеты.
+	* Выполняется до загрузки игры и загружает ассеты.
 	* @memberof stateBoot
 	*/
 	preload: function(){
 
 		console.log('Preloading');
 
-		game.load.image('logo', 'assets/logo.png');
-
 		// Фон
 		game.load.image('wood_light', 'assets/backgrounds/wood_light.png');
 		game.load.image('wood_dark', 'assets/backgrounds/wood_dark.png');
 		game.load.image('green', 'assets/backgrounds/green.png');
-		game.load.image('icon_green', 'assets/backgrounds/icon_green.png');
 		game.load.image('black', 'assets/backgrounds/black.png');
 		game.load.image('assault', 'assets/backgrounds/assault.png');
 		game.load.image('brown', 'assets/backgrounds/brown.png');
@@ -48,11 +49,6 @@ window.stateBoot = new State('boot', {
 		game.load.spritesheet('button_grey_small', 'assets/buttons/grey_small.png', 49, 49, 4);
 		game.load.spritesheet('button_orange_wide', 'assets/buttons/orange_wide.png', 190, 50, 4);
 		game.load.spritesheet('button_orange_small', 'assets/buttons/orange_small.png', 49, 49, 4);
-		game.load.image('button_orange_huge', 'assets/buttons/orange_huge.png');
-		game.load.image('button_orange_yes', 'assets/buttons/orange_yes.png');
-		game.load.image('button_orange_no', 'assets/buttons/orange_no.png');
-		game.load.image('button_orange_left', 'assets/buttons/orange_right.png');
-		game.load.image('button_orange_right', 'assets/buttons/orange_left.png');
 
 		game.load.spritesheet('icon_fullscreen', 'assets/buttons/icon_fullscreen.png', 30, 30, 2);
 		game.load.image('icon_menu', 'assets/buttons/icon_menu.png');
@@ -77,13 +73,14 @@ window.stateBoot = new State('boot', {
 	},
 
 	/**
-	* Инициализирует показ процесса загрузки.
+	* Выполняется в первую очередь, инициализирует показ процесса загрузки.
 	* @memberof stateBoot
 	*/
 	init: function(){
 
 		console.log('Starting up');		
 
+		this.preloadCounter = 0;
 		this.loadCounter = 0;
 
 		this.loadtextDOM = document.getElementById('loading-text');
@@ -94,35 +91,38 @@ window.stateBoot = new State('boot', {
 	/**
 	* Обновляет загрузочный текст.
 	* @param  {string} text       загрузочный текст
+	* @param  {string} counterKey название счетчика загрузки
 	*/
-	updateLoadText: function(text){
-		if(this.loadCounter > 30)
-			this.loadCounter = 0;
-		for(var i = 0; i < this.loadCounter; i++){
+	updateLoadText: function(text, counterKey){
+		if(this[counterKey] > 30)
+			this[counterKey] = 0;
+		for(var i = 0; i < this[counterKey]; i++){
 			text += '.';
 		}
 		this.loadtextDOM.innerHTML = text;
-		this.loadCounter++;
+		this[counterKey]++;
 	},
 
 	/**
+	* Выполняется во время загрузки ассетов.
 	* Выводит текст загрузки.
 	* @memberof stateBoot
 	*/
 	loadUpdate: function(){
-		this.updateLoadText('loading assets');
+		this.updateLoadText('loading assets', 'preloadCounter');
 	},
 
 	/**
+	* Выполняется во время соединения с сервером.
 	* Выводит текст загрузки.
 	* @memberof stateBoot
 	*/
 	update: function(){
-		this.updateLoadText('connecting to server');
+		this.updateLoadText('connecting to server', 'loadCounter');
 	},
 
 	/**
-	* Инициализирует игру и соединение с сервером.
+	* Выполняется после загрузки ассетов, инициализирует игру и соединение с сервером.
 	* @memberof stateBoot
 	*/
 	create: function(){
@@ -136,23 +136,23 @@ window.stateBoot = new State('boot', {
 		* @global
 		*/
 		window.connection = new ConnectionManager(game.inDebugMode, window.serverMethods, window.clientMethods);
+
+	},
+
+	/**
+	* Выполняется после того, как игра обработала изменение размера экрана.
+	* @memberof stateBoot
+	*/
+	postResize: function(){
+
 	},
 
 	/** 
-	* Убирает загрузочный текст и экран. 
+	* Выполняется по окончании загрузки и подключения к серверу. 
+	* Убирает загрузочный текст. 
 	* @memberof stateBoot 
 	*/ 
 	shutdown: function(){ 
 		this.loadtextDOM.innerHTML = ''; 
-		ui.layers.loadLabels();
-
-		// Форсим дебаг
-		if(game.inDebugMode){
-			game.toggleDebugMode();
-			game.toggleDebugMode();
-		}
-
-		document.getElementById('loading').style.display = 'none';
-		console.log('Game ready');
-	}
-});
+	} 
+};

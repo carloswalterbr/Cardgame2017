@@ -65,7 +65,7 @@ Menu.prototype.addButton = function (action, name, text, context) {
 	}
 	this.update();
 };
-Menu.prototype.addSlider = function(action, name, textl,textc,textr){
+/*Menu.prototype.addSlider = function(action, name, textl,textc,textr){
 	
 	
 	var center = new Button({
@@ -102,7 +102,23 @@ Menu.prototype.addSlider = function(action, name, textl,textc,textr){
 	this.update();
 
 
-};
+};*/
+
+Menu.prototype.addSlider2 = function(name){
+	var slide = new Slider({
+		menu:this
+	});
+	this.elementsByName[name] = slide;
+	this.elements.push(slide);
+	slide.updatePosition({x:100,y:200})
+	if(!this.opened){
+		slide.hide();
+	}
+	this.update();
+}
+
+
+
 
 Menu.prototype.resize = function(){
 	var width = 0,
@@ -144,15 +160,21 @@ Menu.prototype.updatePosition = function(position){
 		var element = this.elements[i];
 		if(!element.visible)
 			continue;
-		var slideL = this.slides[0];
+		/*var slideL = this.slides[0];
 		var slideR = this.slides[1];
 		if (element.name ==='CenterOfSlide' ){
 			slideL.position.x = element.position.x-element.width - this.margin;
 			slideR.position.x = element.position.x+ element.width +this.margin;
 			slideL.position.y = element.position.y;
 			slideR.position.y = element.position.y;
+			
 
 		}
+		if (element.name === 'Slider' ){
+			element.updatePosition({x: this.background.width/2 - element.width/2, y: y + this.margin});
+			y += element.height + this.margin;
+			continue;
+		}*/
 		element.updatePosition({x: this.background.width/2 - element.width/2, y: y + this.margin});
 		y += element.height + this.margin;
 	}
