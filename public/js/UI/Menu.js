@@ -65,52 +65,16 @@ Menu.prototype.addButton = function (action, name, text, context) {
 	}
 	this.update();
 };
-/*Menu.prototype.addSlider = function(action, name, textl,textc,textr){
-	
-	
-	var center = new Button({
-			color: 'orange',
-			size: 'small',
-			action: action,
-			text: textc,
-			name: 'CenterOfSlide',
-			group: this.base
-		});
-		this.elementsByName[name] = center;
-		this.elements.push(center);
-
-		var left = new Button({
-		
-			color: 'orange',
-			size: 'small',
-			action: action,
-			text: textl,
-			name: name,
-			group: this.base
-		});
-		var right = new Button({
-		
-			color: 'orange',
-			size: 'small',
-			action: action,
-			text: textr,
-			name: name,
-			group: this.base
-		});
-	this.slides.push(left);
-	this.slides.push(right);
-	this.update();
 
 
-};*/
-
-Menu.prototype.addSlider2 = function(name){
+Menu.prototype.addSlider = function(name){
 	var slide = new Slider({
-		menu:this
+		menu:this,
+		name:name
 	});
 	this.elementsByName[name] = slide;
 	this.elements.push(slide);
-	slide.updatePosition({x:100,y:200})
+	slide.updatePosition({x:0,y:0})
 	if(!this.opened){
 		slide.hide();
 	}

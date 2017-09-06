@@ -108,10 +108,7 @@ UI.prototype.addButtons = function(){
 		localStorage.removeItem('durak_id');
 		document.location.href = document.location.href;
 	}, 'disconnect','Disconnect');
-	this.testMenu.addSlider2('Slider');
-
-	//this.testMenu.addSlider( function(){
-	//	},'lel','','Pin','');
+	this.testMenu.addSlider('Slider');
 
 	this.optMenu.addButton(function(){
 		var mover = game.add.tween(this.elementsByName['CHS']);

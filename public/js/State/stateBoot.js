@@ -25,7 +25,7 @@ window.stateBoot = new State('boot', {
 		game.load.image('wood_light', 'assets/backgrounds/wood_light.png');
 		game.load.image('wood_dark', 'assets/backgrounds/wood_dark.png');
 		game.load.image('green', 'assets/backgrounds/green.png');
-		game.load.image('icon_green', 'assets/backgrounds/icon_green.png');
+		
 		game.load.image('black', 'assets/backgrounds/black.png');
 		game.load.image('assault', 'assets/backgrounds/assault.png');
 		game.load.image('brown', 'assets/backgrounds/brown.png');
@@ -53,7 +53,9 @@ window.stateBoot = new State('boot', {
 		game.load.image('button_orange_no', 'assets/buttons/orange_no.png');
 		game.load.image('button_orange_left', 'assets/buttons/orange_right.png');
 		game.load.image('button_orange_right', 'assets/buttons/orange_left.png');
-
+		game.load.image('icon_green', 'assets/backgrounds/icon_green.png');
+		game.load.image('icon_blue', 'assets/backgrounds/icon_blue.png');
+		game.load.image('icon_wood', 'assets/backgrounds/icon_wood.png');
 		game.load.spritesheet('icon_fullscreen', 'assets/buttons/icon_fullscreen.png', 30, 30, 2);
 		game.load.image('icon_menu', 'assets/buttons/icon_menu.png');
 

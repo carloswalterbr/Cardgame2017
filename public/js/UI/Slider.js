@@ -1,69 +1,68 @@
 var Slider =function(options) {
 	this.options = this.getDefaultOptions();
-	for(var o in options){
-		if(options.hasOwnProperty(o) && options[o] !== undefined)
-			this.options[o] = options[o];
-	}
+ 
+    for(var o in options){ 
+        if(options.hasOwnProperty(o) && options[o] !== undefined) 
+            this.options[o] = options[o]; 
+    } 
+    this,height= 100;
+    this.width = 100;
+	//Phaser.Group.call(this, game, null, this.options.name);
 	this.slideElements = [];
 	this.slidesByName = {};
 	this.content =[];
-	
+	this.group = game.add.group();
+	//this.group.add(leftArrow);
+	//this.group.add(rightArrow);
+	//this.group.children;// все твои элементы
 	var center = new Button({
 	
 			color: 'orange',
 			size: 'huge',
 			action: function(){
-				this.hide();
+				
 			},
-			icon:'green',
+			icon:'blue',
 			name: 'CenterOfSlide',
 			group: options.menu.base
 		});
 
 	this.content.push(center);
+	this.addContent(function(){},'green');
+	this.addContent( this.changeBackground('modern'),'wood');
 
-	this.addContent(function(){ 
-		console.log('sdsdsds');
-		this.hide();},'menu');
-	this.count = 1;
+	this.count = 0;
 	this.previousContent = null;
-	this.currentContent = this.content[this.count-1];
-	this.nextContent = this.content[this.count];
+	this.currentContent = this.content[this.count];
+	this.nextContent = this.content[this.count+1];
+
 	var rightArrow = new Button({
 
 			color: 'orange',
 			size: 'left',
 			action: this.nextSlide.bind(this),
 			text: '',
-			name: name,
+			name: 'rightArrow',
 			group: options.menu.base
 		});
+
 		var leftArrow = new Button({
 		
 			color: 'orange',
 			size: 'right',
-			action: function(){},
+			action: this.prevSlide.bind(this),
 			text: '',
-			name: 'name',
+			name: 'leftArrow',
 			group: options.menu.base
 		});
 	this.slideElements.push(center);
 	this.slideElements.push(leftArrow);
 	this.slideElements.push(rightArrow);
-	this.content.push(center);
-	this.width = this.slideElements[0].width;
-	this.height = this.slideElements[0].height;
-	for (var i = 1; i < this.slideElements.length; i++) {
-		if(this.slideElements[i].height > this.height) {
-			this.height = this.slideElements[i].height;
-		}
-		this.width +=this.slideElements[i].width+this.margin;
-	}
-	var defX = this.options.menu.background.width/2 -this.slideElements[0].width/2;
-
-
 
 }
+
+/*Slider.prototype = Object.create(extendee.prototype);
+Slider.prototype.constructor = Slider;*/
 
 Slider.prototype.getDefaultOptions = function(){
 	return {
@@ -73,7 +72,7 @@ Slider.prototype.getDefaultOptions = function(){
 			alpha:0.5
 		},
 		margin: 60,
-		name: 'default',
+		name: null,
 		color: ui.colors.orange,
 		elementColor: 'orange',
 		textColor: 'white',
@@ -98,27 +97,30 @@ Slider.prototype.updatePosition = function(position){
 	this.slideElements[2].updatePosition({x: this.slideElements[0].x + this.slideElements[0].width+20 ,y: this.y + this.slideElements[1].height });
 	this.defaultPosition = this.slideElements[0].position;
 	for(var i = 1; i <this.content.length; i++) {
-		this.content[i].updatePosition({x: this.slideElements[0].x + this.slideElements[0].width+20 ,y: this.y});
+		this.content[i].updatePosition({x: this.options.menu.background.width/2 -this.slideElements[0].width/2 ,y:this.y});
 	};
-	this.slideElements[0].updatePosition({x: this.options.menu.background.width/2 -this.slideElements[0].width/2 ,y:this.y});
+	//this.slideElements[0].updatePosition({x: this.options.menu.background.width/2 -this.slideElements[0].width/2 ,y:this.y});
 }	
 
 Slider.prototype.hide = function(){
 	for(var i = 0; i<this.slideElements.length;i++){
 		this.slideElements[i].hide();
+		if(this.content[i]) this.content[i].hide();
 	}
 } 
 Slider.prototype.show = function(){
 	for(var i = 0; i<this.slideElements.length;i++){
 		this.slideElements[i].show();
+
 	}
+	this.content[0].show();
+	this.count = 0;
 } 
 Slider.prototype.addContent = function(action,icon){
 var newBut = new Button({
-			position:{
-				x:this.x,
-				y:this.y
-			},
+	position:{
+	x: this.options.menu.background.width/2,
+	y:this.y},
 			color: 'orange',
 			size: 'huge',
 			action: action,
@@ -126,19 +128,34 @@ var newBut = new Button({
 			name: 'default',
 			group: this.options.menu.base
 		});
-newBut.visible = false;
+newBut.hide();
 this.content.push(newBut);
 }
 Slider.prototype.nextSlide = function(){
-		this.currentContent.visible = false;
-		this.nextContent.visible = true;
+		
+		if(this.count <this.content.length-1){
+		this.currentContent.hide();
+		this.nextContent.show();
 		this.previousContent = this.currentContent;
 		this.currentContent = this.nextContent;
-		if(this.content.length<count-1){
-			this.nextContent = null;
-		}
-		else this.nextContent = this.content[count++];
+		this.count++;
+	    this.nextContent = this.content[this.count+1];
+	}
 }
-this.prevSlide = function(){
-							
+Slider.prototype.prevSlide = function(){
+	if(this.count!=0){
+		this.currentContent.hide();
+		this.previousContent.show();
+		this.nextContent = this.currentContent;
+		this.currentContent = this.previousContent;
+		this.count--;
+		if(this.count != 0)
+	    this.previousContent = this.content[this.count-1];
+		else this.previousContent = null;
+	}
+}
+Slider.prototype.changeBackground = function(name){
+ if(skinManager.skin.name != name){
+			skinManager.setSkin(name);
+		}
 }
