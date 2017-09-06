@@ -72,8 +72,11 @@ Menu.prototype.addSlider = function(name){
 		menu:this,
 		name:name
 	});
+	console.log(slide instanceof Phaser.Group)
 	this.elementsByName[name] = slide;
 	this.elements.push(slide);
+	slide.height = 100;
+	slide.width = 100;
 	slide.updatePosition({x:0,y:0})
 	if(!this.opened){
 		slide.hide();

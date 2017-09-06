@@ -5,9 +5,7 @@ var Slider =function(options) {
         if(options.hasOwnProperty(o) && options[o] !== undefined) 
             this.options[o] = options[o]; 
     } 
-    this,height= 100;
-    this.width = 100;
-	//Phaser.Group.call(this, game, null, this.options.name);
+	
 	this.slideElements = [];
 	this.slidesByName = {};
 	this.content =[];
@@ -58,11 +56,12 @@ var Slider =function(options) {
 	this.slideElements.push(center);
 	this.slideElements.push(leftArrow);
 	this.slideElements.push(rightArrow);
-
+	
+	Phaser.Group.call(this, game, null, this.options.name);
 }
 
-/*Slider.prototype = Object.create(extendee.prototype);
-Slider.prototype.constructor = Slider;*/
+Slider.prototype = Object.create(Phaser.Group.prototype);
+Slider.prototype.constructor = Slider;
 
 Slider.prototype.getDefaultOptions = function(){
 	return {
