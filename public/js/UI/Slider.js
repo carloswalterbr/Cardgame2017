@@ -14,7 +14,6 @@ var Slider =function(options) {
 		game.add.existing(this);
 	}
 
-	this.slideElements = [];
 	this.slidesByName = {};
 	this.content = [];
 	this.addContent(this.changeBackground.bind(this,'modern'),'blue');
@@ -26,28 +25,21 @@ var Slider =function(options) {
 	this.currentContent = this.content[this.count];
 	this.nextContent = this.content[this.count+1];
 
-	var rightArrow = new Button({
-
+	this.rightArrow = new Button({
 		color: 'orange',
 		size: 'left',
 		action: this.nextSlide.bind(this),
-		text: '',
 		name: 'rightArrow',
 		group: this
 	});
 
-	var leftArrow = new Button({
-	
+	this.leftArrow = new Button({	
 		color: 'orange',
 		size: 'right',
 		action: this.prevSlide.bind(this),
-		text: '',
 		name: 'leftArrow',
 		group: this
 	});
-	this.slideElements.push(this.content[0]);
-	this.slideElements.push(leftArrow);
-	this.slideElements.push(rightArrow);
 	
 };
 
@@ -82,12 +74,11 @@ Slider.prototype.updatePosition = function(position){
 	this.y = position.y;
 
 	var content = this.content[0];
-	var center = this.slideElements[0];
-	var left = this.slideElements[1];
-	var right = this.slideElements[2];
+	var left = this.leftArrow;
+	var right = this.rightArrow;
 	var margin = this.options.margin;
 
-	center.updatePosition({
+	content.updatePosition({
 		x: left.width + margin,
 		y: 0
 	});
@@ -96,13 +87,13 @@ Slider.prototype.updatePosition = function(position){
 		y: content.height/2 - left.height/2
 	});
 	right.updatePosition({
-		x: left.width + center.width + margin*2,
+		x: left.width + content.width + margin*2,
 		y: content.height/2 - left.height/2
 	});
 	for(var i = 1; i < this.content.length; i++) {
 		this.content[i].updatePosition({
-			x: center.x,
-			y: center.y
+			x: content.x,
+			y: content.y
 		});
 	}
 	
@@ -120,9 +111,8 @@ Slider.prototype.hide = function(){
 };
 
 Slider.prototype.show = function(){
-	for(var i = 0; i<this.slideElements.length;i++){
-		this.slideElements[i].show();
-	}
+	this.leftArrow.show();
+	this.rightArrow.show();
 	this.content[0].show();
 	this.count = 0;
 };
@@ -173,3 +163,7 @@ Slider.prototype.changeBackground = function(name){
 			skinManager.setSkin(name);
 		}
 };
+
+Slider.prototype.cursorIsOver = function(){
+	return this.leftArrow.cursorIsOver() || this.rightArrow.cursorIsOver() || this.currentContent.cursorIsOver && this.currentContent.cursorIsOver();
+}
