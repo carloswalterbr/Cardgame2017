@@ -17,24 +17,9 @@ var Slider =function(options) {
 	this.slideElements = [];
 	this.slidesByName = {};
 	this.content = [];
-	//this.group.add(leftArrow);
-	//this.group.add(rightArrow);
-	//this.group.children;// все твои элементы
-	var center = new Button({
-	
-			color: 'orange',
-			size: 'huge',
-			action: function(){
-				
-			},
-			icon:'blue',
-			name: 'CenterOfSlide',
-			group: this
-		});
-
-	this.content.push(center);
-	this.addContent(function(){},'green');
-	this.addContent(this.changeBackground('modern'),'wood');
+	this.addContent(this.changeBackground.bind(this,'modern'),'blue');
+	this.addContent(this.changeBackground.bind(this,'uno'),'green');
+	this.addContent(this.changeBackground.bind(this,'classic'),'wood');
 
 	this.count = 0;
 	this.previousContent = null;
@@ -60,7 +45,7 @@ var Slider =function(options) {
 		name: 'leftArrow',
 		group: this
 	});
-	this.slideElements.push(center);
+	this.slideElements.push(this.content[0]);
 	this.slideElements.push(leftArrow);
 	this.slideElements.push(rightArrow);
 	
@@ -93,7 +78,6 @@ Slider.prototype.updatePosition = function(position){
 		position = this.defaultPosition;
 	if(typeof position == 'function')
 		position = position(this.width, this.height);
-	console.log('[r[r[[r[rr[');
 	this.x = position.x;
 	this.y = position.y;
 
@@ -121,7 +105,7 @@ Slider.prototype.updatePosition = function(position){
 			y: center.y
 		});
 	}
-	//this.slideElements[0].updatePosition({x: this.options.menu.background.width/2 -this.slideElements[0].width/2 ,y:this.y});
+	
 };
 
 Slider.prototype.hide = function(){
@@ -186,6 +170,6 @@ Slider.prototype.prevSlide = function(){
 
 Slider.prototype.changeBackground = function(name){
 	if(skinManager.skin.name != name){
-		skinManager.setSkin(name);
-	}
+			skinManager.setSkin(name);
+		}
 };
