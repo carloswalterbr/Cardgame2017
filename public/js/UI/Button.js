@@ -192,8 +192,8 @@ Button.prototype.cursorIsOver = function(){
 		gy = 0, 
 		yFix = 0;
 	if(this.group){
-		gx = this.group.x;
-		gy = this.group.y;
+		gx = this.group.worldPosition.x;
+		gy = this.group.worldPosition.y;
 	}
 	if(this.label && this.isDown){
 		gy += 5;
