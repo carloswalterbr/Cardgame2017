@@ -51,8 +51,10 @@ window.stateBoot = new State('boot', {
 		game.load.image('button_orange_huge', 'assets/buttons/orange_huge.png');
 		game.load.image('button_orange_yes', 'assets/buttons/orange_yes.png');
 		game.load.image('button_orange_no', 'assets/buttons/orange_no.png');
-		game.load.image('button_orange_left', 'assets/buttons/orange_right.png');
-		game.load.image('button_orange_right', 'assets/buttons/orange_left.png');
+		game.load.spritesheet('button_orange_left', 'assets/buttons/orange_right.png',40,31,1);
+		//game.load.image('button_orange_leftNO', 'assets/buttons/orange_leftNO.png');
+		//game.load.image('button_orange_rightNO', 'assets/buttons/orange_rightNO.png');
+		game.load.spritesheet('button_orange_right', 'assets/buttons/orange_left.png',40,31,1);
 		game.load.image('icon_green', 'assets/backgrounds/icon_green.png');
 		game.load.image('icon_blue', 'assets/backgrounds/icon_blue.png');
 		game.load.image('icon_wood', 'assets/backgrounds/icon_wood.png');

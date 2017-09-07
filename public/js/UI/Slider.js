@@ -143,17 +143,26 @@ Slider.prototype.addContent = function(action,icon){
 Slider.prototype.nextSlide = function(){
 		
 	if(this.count < this.content.length-1){
+		if(!this.slideElements[1].inputEnabled){
+			this.slideElements[1].inputEnabled = true;
+		}
 		this.currentContent.hide();
 		this.nextContent.show();
 		this.previousContent = this.currentContent;
 		this.currentContent = this.nextContent;
 		this.count++;
 		this.nextContent = this.content[this.count+1];
+
 	}
+	else this.slideElements[2].inputEnabled = false;
+
 };
 
 Slider.prototype.prevSlide = function(){
 	if(this.count !== 0){
+		if(!this.slideElements[2].inputEnabled){
+			this.slideElements[2].inputEnabled = true;
+		}
 		this.currentContent.hide();
 		this.previousContent.show();
 		this.nextContent = this.currentContent;
@@ -166,6 +175,7 @@ Slider.prototype.prevSlide = function(){
 			this.previousContent = null;
 		}
 	}
+	else this.slideElements[1].inputEnabled = false;
 };
 
 Slider.prototype.changeBackground = function(name){
