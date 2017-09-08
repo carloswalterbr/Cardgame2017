@@ -16,9 +16,10 @@ var Slider =function(options) {
 
 	this.slidesByName = {};
 	this.content = [];
-	this.addContent(this.changeBackground.bind(this,'modern'),'blue');
-	this.addContent(this.changeBackground.bind(this,'uno'),'green');
-	this.addContent(this.changeBackground.bind(this,'classic'),'wood');
+	this.addButtonContent(this.changeBackground.bind(this,'modern'),'blue');
+	this.addButtonContent(this.changeBackground.bind(this,'uno'),'green');
+	this.addButtonContent(this.changeBackground.bind(this,'classic'),'wood');
+	this.addTextContent('lol');
 
 	this.count = 0;
 	this.previousContent = null;
@@ -59,7 +60,9 @@ Slider.prototype.getDefaultOptions = function(){
 		elementColor: 'orange',
 		textColor: 'white',
 		menu: null,
-		icon:null
+		icon:null,
+		textColor: 'black',
+		font: '28px Exo'
 	};
 };
 
@@ -115,9 +118,11 @@ Slider.prototype.show = function(){
 	this.rightArrow.show();
 	this.content[0].show();
 	this.count = 0;
+	this.rightArrow.inputEnabled = true;
+	this.leftArrow.inputEnabled = false;
 };
 
-Slider.prototype.addContent = function(action,icon){
+Slider.prototype.addButtonContent = function(action,icon){
 	var newBut = new Button({
 		color: 'orange',
 		size: 'huge',
@@ -129,12 +134,17 @@ Slider.prototype.addContent = function(action,icon){
 	newBut.hide();
 	this.content.push(newBut);
 };
+Slider.prototype.addTextContent = function (text) {
+	var style = { font: this.options.font, fill: this.options.textColor, align: 'center' };
+	var text = game.make.text(this.centerX, this.centerY, text, style);
+	text.maxWidth = 100;
+}
 
 Slider.prototype.nextSlide = function(){
 		
 	if(this.count < this.content.length-1){
-		if(!this.slideElements[1].inputEnabled){
-			this.slideElements[1].inputEnabled = true;
+		if(!this.leftArrow.inputEnabled){
+			this.leftArrow.inputEnabled = true;
 		}
 		this.currentContent.hide();
 		this.nextContent.show();
@@ -144,14 +154,14 @@ Slider.prototype.nextSlide = function(){
 		this.nextContent = this.content[this.count+1];
 
 	}
-	else this.slideElements[2].inputEnabled = false;
+	else this.rightArrow.inputEnabled = false;
 
 };
 
 Slider.prototype.prevSlide = function(){
 	if(this.count !== 0){
-		if(!this.slideElements[2].inputEnabled){
-			this.slideElements[2].inputEnabled = true;
+		if(!this.rightArrow.inputEnabled){
+			this.rightArrow.inputEnabled = true;
 		}
 		this.currentContent.hide();
 		this.previousContent.show();
@@ -165,7 +175,7 @@ Slider.prototype.prevSlide = function(){
 			this.previousContent = null;
 		}
 	}
-	else this.slideElements[1].inputEnabled = false;
+	else this.leftArrow.inputEnabled = false;
 };
 
 Slider.prototype.changeBackground = function(name){
