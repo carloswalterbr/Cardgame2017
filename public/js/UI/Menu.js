@@ -169,11 +169,10 @@ Menu.prototype.show = function(){
 	this.background.visible = true;
 	for (var i = 0; i < this.elements.length; i++) {
 		this.elements[i].show();
+		this.update();
 	}
-	for (var i = 0; i < this.slides.length; i++) {
-		this.slides[i].show();
-	}
-	this.update();
+	
+	
 };
 Menu.prototype.toggle = function(){
 	if(this.opened){

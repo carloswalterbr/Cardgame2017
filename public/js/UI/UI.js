@@ -108,8 +108,12 @@ UI.prototype.addButtons = function(){
 		localStorage.removeItem('durak_id');
 		document.location.href = document.location.href;
 	}, 'disconnect','Disconnect');
-	this.optMenu.addSlider('Slider');
+	this.testMenu.addSlider('Slider');
+ var style = { font: "65px Arial", fill: "#ff0044", align: "center" };
 
+    var text = game.add.text(game.world.centerX, game.world.centerY, "- phaser -\nwith a sprinkle of\npixi dust", style);
+text.group = this
+    text.anchor.set(0.5);
 	this.optMenu.addButton(function(){
 		var mover = game.add.tween(this.elementsByName['CHS']);
 		mover.to({			

@@ -16,11 +16,21 @@ var Slider =function(options) {
 
 	this.slidesByName = {};
 	this.content = [];
-	this.addButtonContent(this.changeBackground.bind(this,'modern'),'blue');
+	
 	this.addButtonContent(this.changeBackground.bind(this,'uno'),'green');
 	this.addButtonContent(this.changeBackground.bind(this,'classic'),'wood');
-	this.addTextContent('lol');
+	this.addTextContent('change');
+	this.addTextContent('casual');
+	this.addButtonContent(this.changeBackground.bind(this,'modern'),'blue');
 
+	this.maxHeight = this.content[0].height;
+	this.maxWidth = this.content[0].width;
+	for(i = 1; i< this.content.length;i++){
+		if(this.content[i].width > this.maxWidth)
+			this.maxWidth = this.content[i].width;
+		if(this.content[i].height > this.maxHeight)
+			this.maxHeight= this.content[i].height;
+	}
 	this.count = 0;
 	this.previousContent = null;
 	this.currentContent = this.content[this.count];
@@ -61,7 +71,6 @@ Slider.prototype.getDefaultOptions = function(){
 		textColor: 'white',
 		menu: null,
 		icon:null,
-		textColor: 'black',
 		font: '28px Exo'
 	};
 };
@@ -80,24 +89,38 @@ Slider.prototype.updatePosition = function(position){
 	var left = this.leftArrow;
 	var right = this.rightArrow;
 	var margin = this.options.margin;
-
-	content.updatePosition({
-		x: left.width + margin,
-		y: 0
-	});
+	
+	
+	if(content instanceof Phaser.Text){
+		content.x = left.width + margin;
+		content.y = this.maxHeight/2 - left.height/2;
+		}
+	else{
+		content.updatePosition({
+			x: left.width + margin,
+			y: 0
+		});
+		}
 	left.updatePosition({
 		x: 0,
-		y: content.height/2 - left.height/2
+		y: this.maxHeight/2 - left.height/2
 	});
 	right.updatePosition({
-		x: left.width + content.width + margin*2,
-		y: content.height/2 - left.height/2
+		x: left.width + this.maxWidth + margin*2,
+		y: this.maxHeight/2 - left.height/2
 	});
 	for(var i = 1; i < this.content.length; i++) {
+		if(this.content[i] instanceof Phaser.Text){
+			this.content[i].x= content.x,
+			this.content[i].y= this.maxHeight/2 - left.height/2
+		continue;
+	}
+	else{
 		this.content[i].updatePosition({
-			x: content.x,
-			y: content.y
+			x: left.width + margin,
+			y: 0
 		});
+	}
 	}
 	
 };
@@ -116,7 +139,13 @@ Slider.prototype.hide = function(){
 Slider.prototype.show = function(){
 	this.leftArrow.show();
 	this.rightArrow.show();
+	if(this.content[0] instanceof Phaser.Text){
+		this.content[0].visible = true;
+		console.log('wewewew');
+	}
+	else{
 	this.content[0].show();
+	}
 	this.count = 0;
 	this.rightArrow.inputEnabled = true;
 	this.leftArrow.inputEnabled = false;
@@ -129,15 +158,19 @@ Slider.prototype.addButtonContent = function(action,icon){
 		action: action,
 		icon:icon,
 		name: 'default',
+		context: 'button',
 		group: this
 	});
 	newBut.hide();
 	this.content.push(newBut);
 };
 Slider.prototype.addTextContent = function (text) {
-	var style = { font: this.options.font, fill: this.options.textColor, align: 'center' };
+	var style = { font: this.options.font, fill: 'white', align: 'center' };
 	var text = game.make.text(this.centerX, this.centerY, text, style);
+
 	text.maxWidth = 100;
+	this.add(text);
+	this.content.push(text);
 }
 
 Slider.prototype.nextSlide = function(){
@@ -146,8 +179,18 @@ Slider.prototype.nextSlide = function(){
 		if(!this.leftArrow.inputEnabled){
 			this.leftArrow.inputEnabled = true;
 		}
-		this.currentContent.hide();
-		this.nextContent.show();
+		if(this.currentContent instanceof Phaser.Text){
+			this.currentContent.visible = false;
+		}
+		else{
+			this.currentContent.hide();
+		}
+		if(this.nextContent instanceof Phaser.Text){
+			this.nextContent.visible = true;
+		}
+		else{
+			this.nextContent.show();
+		}
 		this.previousContent = this.currentContent;
 		this.currentContent = this.nextContent;
 		this.count++;
@@ -163,8 +206,18 @@ Slider.prototype.prevSlide = function(){
 		if(!this.rightArrow.inputEnabled){
 			this.rightArrow.inputEnabled = true;
 		}
-		this.currentContent.hide();
-		this.previousContent.show();
+		if(this.currentContent instanceof Phaser.Text){
+			this.currentContent.visible = false;
+		}
+		else{
+			this.currentContent.hide();
+		}
+		if(this.previousContent instanceof Phaser.Text){
+			this.previousContent.visible = true;
+		}
+		else{
+			this.previousContent.show();
+		}
 		this.nextContent = this.currentContent;
 		this.currentContent = this.previousContent;
 		this.count--;
