@@ -61,18 +61,19 @@ UI.Credits.prototype.stop = function(){
 
 /* exported creditsText */
 var creditsText = 
-'"Durak"\nan unoriginal digital cardgame\n\n\
+'Игровая программа "Дурак подкидной"\n\n\
 \
-Lead programmer\nSHIBAEV OLEG\n\n\
-UI designer and programmer\nGEORGY TESLENKO\n\n\
-AI programmer\nSERGEY DARNOPYKH\n\n\
-\
-Assets (OpenGameArt.Org)\n\
+Сергей Дарнопых\n\
+в роли программиста ИИ\n\n\
+Тесленко Георгий\n\
+в роли разработчика интерфейса пользователя\n\n\
+Шибаев Олег\n\
+в роли создателя игрового поля,\n\
+логики игры,\n\
+и разработчика серверной части,\n\n\
+OpenGameArt.Org Assets:\n\
 "UI pack" by Kenney\n\
 "Modern Cards" by Kenney\n\
 "Classic Cards" by Byron Knoll\n\n\
 \
-Built on\n\
-Phaser.io\n\
-Node.js\n\
-Eureca.io';
+Vitae TRISTIQUE MAURIS';

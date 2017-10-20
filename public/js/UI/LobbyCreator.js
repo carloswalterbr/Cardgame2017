@@ -1,20 +1,38 @@
 var LobbyCreator = function(options){
 	this.options = mergeOptions(this.getDefaultLobbyOptions(), options);
-	var stepperWidth = 110;
-	var textWidth = 100;
 	var layout = [
-
 		Menu.alignLeft(
 			Menu.text({
-				text:'Players',
+				text:'Players   ',
 				name:'numOfPlayers',
-				hoverText:'Number of human players',
-				hoverPlacement: 'left',
-				fixedWidth: textWidth
+				hoverText:'Number of real players'
 			}),
 			Menu.stepper({
-				action: this.limitBotSelectorRange,
-				context: this,
+				action:function(key){
+					//debugger
+						var bots = this.getElementByName('stepOfBots');
+					if((Number(key) + Number(bots.getCurrentKey())) > 6){
+						bots.prev();
+						bots.arrowRight.disable();
+						bots.arrowRight.alpha = 0.5;
+						if(bots.previousContent){
+							bots.arrowLeft.enable();
+							bots.arrowLeft.alpha = 1;
+						}
+					}
+					else if((Number(key) + Number(bots.getCurrentKey())) < 6){
+							bots.arrowRight.enable();
+							bots.arrowRight.alpha = 1;
+							if(bots.nextContent){
+								bots.arrowRight.enable();
+								bots.arrowRight.alpha = 1;
+						}
+						}
+					if(Number(bots.nextContent.text)+ Number(key) > 6){
+						bots.arrowRight.disable();
+						bots.arrowRight.alpha = 0.5
+					}
+				},
 				name:'stepOfPlayers',
 				choices: { 
 					'1': '1',
@@ -24,26 +42,48 @@ var LobbyCreator = function(options){
 					'5': '5',
 					'6': '6',
 				},
-				minWidth: stepperWidth,
-				startKey: '2'
+				minWidth: 100,
+				context:this
 			}),
 			Menu.checkbox({
-				text: 'Transfer',
-				name: 'transfer',
-				hoverText: 'Players can play a card with the same value instead of defending to force the next player to defend',
-				hoverPlacement: 'right'
+				text:'Private',
+				name:'private',
+				hoverText:'Youre game will be private'
 			})
 		),
-
 		Menu.alignLeft(
 			Menu.text({
-				text: 'Bots',
-				name: 'numOfBots',
-				hoverText: 'Number of AI-controlled players',
-				hoverPlacement: 'left',
-				fixedWidth: textWidth
+				text:'Bots        ',
+				name:'numOfBots',
+				hoverText:'Number of bots'
 			}),
 			Menu.stepper({
+				action:function(key){
+					//debugger
+						var players = this.getElementByName('stepOfPlayers');
+						var bots = this.getElementByName('stepOfBots');
+					if((Number(key) + Number(players.getCurrentKey()) > 6)){
+							bots.prev();
+							bots.arrowRight.disable();
+							bots.arrowRight.alpha = 0.5;
+							if(bots.previousContent)
+								if(bots.previousContent.text){
+									bots.arrowLeft.enable();
+									bots.arrowLeft.alpha = 1;
+								}
+					}
+					else 
+						if((Number(key) + Number(players.getCurrentKey())) < 6){
+							bots.arrowRight.enable();
+							bots.arrowRight.alpha = 1;
+						}
+					if(bots.nextContent){
+							if(Number(bots.nextContent.text)+ Number(players.getCurrentKey()) > 6){
+								bots.arrowRight.disable();
+								bots.arrowRight.alpha = 0.5
+							}
+						}
+				},
 				name:'stepOfBots',
 				choices:{ 
 					'0': '0',
@@ -53,25 +93,20 @@ var LobbyCreator = function(options){
 					'4': '4',
 					'5': '5',
 				},
-				minWidth: stepperWidth,
-				context: this,
+				minWidth: 100,
+				context:this,
 				startKey: '0'
 			}),
 			Menu.checkbox({ 
-				text: 'Free for all',
-				name: 'freeForAll',
-				hoverText: 'Multiple players will be able to attack at the same time',
-				hoverPlacement: 'right'
+				text:'Transfer',
+				name:'transfer',
+				hoverText:'Enable Transfer'
 			})
 		),
-
 		Menu.alignLeft(
 			Menu.text({
 				text:'Deck size',
 				name:'deckSize',
-				hoverText: '36 cards deck is recommended for 2-4 players game, 52 cards deck is recommended for 4-6 players game',
-				hoverPlacement: 'left',
-				fixedWidth: textWidth
 			}),
 			Menu.stepper({
 				name:'deckSizeStep',
@@ -79,13 +114,12 @@ var LobbyCreator = function(options){
 					'1': '36',
 					'2': '52'			
 				},
-				minWidth: stepperWidth
+				minWidth: 100
 			}),
 			Menu.checkbox({
-				text: 'Limit followup',
-				name: 'limitFollowup',
-				hoverText: 'Limits the amount of cards that players can follow up with by the defender\'s hand size at the start of the turn',
-				hoverPlacement: 'right'
+				text:'Free for all',
+				name:'freeForAll',
+				hoverText:' something'
 			})
 		),
 		
@@ -93,9 +127,7 @@ var LobbyCreator = function(options){
 			Menu.text({
 				text:'Difficulty',
 				name:'difficulty',
-				hoverText: 'Difficulty of the AI-controlled opponents',
-				hoverPlacement: 'left',
-				fixedWidth: textWidth
+				hoverText:''
 			}),
 			Menu.stepper({
 				name:'stepOfDifficulty',
@@ -103,48 +135,37 @@ var LobbyCreator = function(options){
 					'1': 'Easy',
 					'2': 'Medium',
 					'3': 'Hard',
-					'4': 'Godlike',
+					'4': 'Cheater',
 				},
-				minWidth: stepperWidth,
+				minWidth: 100,
 				context:this
 			}),
 			Menu.checkbox({
 				text:'Limit attack',
 				name:'limitAttack',
-				hoverText:'Only players adjacent to the defender can attack',
-				hoverPlacement: 'right'
+				hoverText:'something'
 			})
 		),
-
-		[
-			Menu.checkbox({
-				text: 'Private',
-				name: 'private',
-				hoverText: 'Players won\'t be able to find your game via the Find Game menu',
-				hoverPlacement: 'bottom'
-			}),
-			{
-				name:'createGame',
-				text:'Create Game',
-				action:function(){
-					this.createGame();
-				},
+		Menu.alignRight(Menu.checkbox({
+				text:'Limit    ' +'\n' + 'followup     ',
+				name:'limitFollowup',
+				hoverText:'something'
+			})),
+		{
+			name:'createGame',
+			text:'Create Game',
+			action:function(){
+				this.createGame()
 			},
-			{
-				name:'cancel',
-				text:'Cancel',
-				action:function(){
-					ui.menus.main.fadeIn();
-					ui.logo.fadeIn();
-					this.fadeOut();
-				},
-				context: this
-			}
-		]	
+		},
+		
 	];
 	this.options.layout = layout;
 	
-	Menu.call(this, this.options);	
+	//if(Number(this.getElementByName('stepOfPlayers').getCurrentKey()) + Number(this.getElementByName('stepOfBots').getCurrentKey()) ==1 )
+	//	this.getElementByName('stepOfBots').currentContent = 2;
+	Menu.call(this, this.options);
+	
 };
 
 extend(LobbyCreator, Menu);
@@ -169,8 +190,13 @@ LobbyCreator.prototype.getDefaultLobbyOptions = function(){
 		border: 4,
 		fadeTime: 200,
 		layout: null,
+		closeButton: function(){
+			ui.menus.main.fadeIn();
+			ui.logo.fadeIn();
+			ui.menus.creator.fadeOut();
+		},
 		closeButtonCrossColor: 'white',
-		header: 'Create Game',
+		header: 'Create lobby',
 		headerHeight: 40,
 		headerColor: 'red',
 		headerTextColor: 'white'
@@ -191,20 +217,7 @@ LobbyCreator.prototype.createGame = function(){
 		freeForAll:this.getElementByName('freeForAll').checked,
 		limitAttack:this.getElementByName('limitAttack').checked,
 		limitFollowup:this.getElementByName('limitFollowup').checked
-	};
+	}
 	ui.menus.creator.fadeOut();
-	connection.proxy.createCustomQueue(private, gameMode, config, rules);
-};
-
-LobbyCreator.prototype.limitBotSelectorRange = function(key){
-	var botSelector = this.getElementByName('stepOfBots');
-	var numBots = Number(botSelector.getCurrentKey());
-	var numPlayers = Number(key);
-	var max = 6;
-	if(numPlayers < 2){
-		botSelector.limitRange(1, Infinity);
-	}
-	else{
-		botSelector.limitRange(0, max - numPlayers);
-	}
+	connection.proxy.createCustomQueue(private, gameMode, config, rules)
 };
