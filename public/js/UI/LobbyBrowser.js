@@ -236,3 +236,4 @@ LobbyBrowser.prototype._addButton = function(options){
 	this.elements.push(button);
 	return button;
 };
+//MENU4
