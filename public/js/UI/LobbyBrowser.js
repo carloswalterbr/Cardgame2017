@@ -146,8 +146,7 @@ LobbyBrowser.prototype.resetButtons = function(){
 	}
 	this.disableElement('right');
 	this.disableElement('left');
-	if(this.list[0])
-		this.select(0);	
+
 };
 
 LobbyBrowser.prototype.recieveList = function(action){
@@ -168,7 +167,9 @@ LobbyBrowser.prototype.recieveList = function(action){
 	if(action.moreBefore){
 		this.enableElement('left');
 	}
-	
+	if(this.list[0]){
+		this.select(0);	
+	}
 };
 
  LobbyBrowser.prototype.select = function(u){
@@ -180,13 +181,17 @@ LobbyBrowser.prototype.recieveList = function(action){
  	this.selectedQueue = this.list[u].id
  //	this.selectedID = this.list[u].id;
  	for(var i = 0; i < this.pagination; i++){
+ 		if(i < this.list.length){
+			this.enableElement('button' + i);
+ 		}
  		this.buttons[i].changeStyle(3);
- 		if(i==0) this.buttons[i].changeStyle(1);
+ 		if(i===0) this.buttons[i].changeStyle(1);
 		if(i== this.pagination-1) this.buttons[i].changeStyle(2);
  	}
  	this.buttons[u].changeStyle(6);
  	if(u==0) this.buttons[u].changeStyle(4);
 	if(u== this.pagination-1) this.buttons[u].changeStyle(5);
+ 	this.disableElement('button' + u);
  	
  };
 

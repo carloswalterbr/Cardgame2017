@@ -112,11 +112,11 @@ UI.prototype._createButtons = function(){
 		size: 'small',
 		group: this.cornerButtons
 	});
-	/*// Дебаг
+	// Дебаг
 	new UI.Button({
 		position: function(width, height){
 			return {
-				x: game.screenWidth - 30 - width*2,
+				x: game.screenWidth - 45 - width*3,
 				y: game.screenHeight - 15 - height
 			};
 		},
@@ -128,13 +128,13 @@ UI.prototype._createButtons = function(){
 		size: 'small',
 		textColor: 'white',
 		group: this.cornerButtons
-	});*/
+	});
 
-	/*// Завершение последовательности
+	// Завершение последовательности
 	new UI.Button({
 		position: function(width, height){
 			return {
-				x: game.screenWidth - 45 - width*3,
+				x: game.screenWidth - 60 - width*4,
 				y: game.screenHeight - 15 - height
 			};
 		},
@@ -146,5 +146,5 @@ UI.prototype._createButtons = function(){
 		size: 'small',
 		textColor: 'white',
 		group: this.cornerButtons
-	});*/
+	});
 };
